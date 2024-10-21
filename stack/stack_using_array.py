@@ -30,7 +30,7 @@ class MyStack:
         #To initiate the size of the stack to 1.
         self.size = 1
         #To initiate the size of stack to zero, as the stack is empty.
-        self.n = 0
+        self.top = 0
         #To create a stack with the size 1.
         self.StackA = create_stack(self.size)
 
@@ -45,7 +45,7 @@ class MyStack:
         StackB = create_stack(increment_factor)
 
         #loop through the elements of the existing stack
-        for i in range(0,self.n):
+        for i in range(0,self.top):
             #assigning the stack elements from old stack to new stack.
             StackB[i] = self.StackA[i]
 
@@ -58,15 +58,15 @@ class MyStack:
 
     def push(self,value):
         #To verify whether the stack is full.
-        if self.size == self.n :
+        if self.size == self.top :
             #If the stack is full, then resize the stack by the increment_factor times of existing size
             self.StackA = self.resize_stack(self.size*MyStack.increment_factor)
 
         #assign the value to the last element of the stack.
-        self.StackA[self.n] = value
+        self.StackA[self.top] = value
 
         #To increase the size of stack by one.
-        self.n = self.n + 1
+        self.top = self.top + 1
 
     def __str__(self):
         #To check whether the stack is empty.
@@ -77,7 +77,7 @@ class MyStack:
         #Initialize the stack by "".
         sstr = ""
         #loop through the elements of the stack
-        for i in range(0,self.n):
+        for i in range(0,self.top):
             #append the stack elements to the string.
             sstr = sstr + str(self.StackA[i])+ "<-"
 
@@ -86,7 +86,7 @@ class MyStack:
 
     def is_empty(self):
         #To check whether the number of elements in the stack is zero.
-        if self.n == 0 :
+        if self.top == 0 :
             #if the stack has no elements, then return 1.
             return 1
         #if the stack has more elements, then retuen zero.
@@ -97,9 +97,9 @@ class MyStack:
         if self.is_empty():
             return "Stack is empty"
         #To retrieve the value of the Top
-        pop_value = self.StackA[self.n-1]
+        pop_value = self.StackA[self.top-1]
         #reduce the value of n to n-1
-        self.n = self.n-1
+        self.top = self.top-1
         #return the popped value.
         return pop_value
 
@@ -114,7 +114,7 @@ class MyStack:
             return 'Stack is empty'
 
         #To return the value of last eement
-        return self.StackA[self.n-1]
+        return self.StackA[self.top-1]
 
 if __name__ == "__main__":
 
