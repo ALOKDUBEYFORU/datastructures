@@ -76,23 +76,24 @@ class LinkedList:
     def len(self):
         return self.llsize
 
+
 class Dictionary:
-    def __init__(self,capacity=2):
+    def __init__(self, capacity=2):
         self.capacity = capacity
         self.dictelements = 0
         self.buckets = self.make_array(self.capacity)
 
-    def make_array(self,capacity):
+    def make_array(self, capacity):
         L = []
         for i in range(capacity):
             L.append(LinkedList())
         return L
 
-    def hash_function(self,key):
-        return abs(hash(key))%self.capacity
+    def hash_function(self, key):
+        return abs(hash(key)) % self.capacity
 
-    def rehash(self,capacity):
-        #create a temporary bucket of the size capacity
+    def rehash(self, capacity):
+        # create a temporary bucket of the size capacity
 
         old_buckets = self.buckets
 
@@ -102,55 +103,91 @@ class Dictionary:
         for i in range(len(old_buckets)):
             for node in range(old_buckets[i].len()):
                 if old_buckets[i].get_node_at_index(node) != None:
-                    self.put(old_buckets[i].get_node_at_index(node).key,old_buckets[i].get_node_at_index(node).value)
+                    self.put(old_buckets[i].get_node_at_index(node).key, old_buckets[i].get_node_at_index(node).value)
 
-    def get_node_index(self,bucket_index,key):
+    def get_node_index(self, bucket_index, key):
         node_index = self.buckets[bucket_index].index(key)
         return node_index
 
-    def put(self,key,value):
-        bucket_index = self.hash_function(key)
-        self.dictelements = self.dictelements + 1
-
-        #let us calculate the load factor.
+    def put(self, key, value):
+        '''
+        put method is used to insert or update a key in a bucket.
+        '''
+        # let us calculate the load factor.
         load_factor = self.dictelements / self.capacity
-
-        if load_factor >= 2 :
+        # If the load_factor is above 2.
+        if load_factor >= 2:
+            # use the rehashing for the same.
             self.rehash(self.capacity)
 
-        node_index = self.get_node_index(bucket_index,key)
+        # get the index of the key based on the hash function.
+        bucket_index = self.hash_function(key)
+        # search for the index of the node in that particular bucket.
+        node_index = self.get_node_index(bucket_index, key)
 
+        # Verify whether the key does not exists.
         if node_index == -1:
-            self.buckets[bucket_index].append(key,value)
+            # append the key and value
+            self.buckets[bucket_index].append(key, value)
+            # As we are trying to insert the value, let us increase the value.
+            self.dictelements = self.dictelements + 1
+        # index had been found for the key.
         else:
+            # let us get the address of the node.
             node = self.buckets[bucket_index].get_node_at_index(node_index)
+            # update the value of an existing string.
             node.value = value
 
-
     def __str__(self):
+        '''
+        str method is used to display the contents of the buckets.
+        '''
+        # create a new empty string
         dstr = ""
+        # let us loop through bucket in buckets.
         for i in range(self.capacity):
-            dstr = dstr[:-4] +"\n"+ 'bucket-'+str(i) + "->"
-            if self.buckets[i] != None :
-                dstr = dstr + str(self.buckets[i])+'<-->'
+            # loop through each bucket.
+            dstr = dstr[:-4] + "\n" + 'bucket-' + str(i) + "->"
+            # let us add the linked list to the string
+            dstr = dstr + str(self.buckets[i]) + '<-->'
         return dstr[:-4]
 
-    def get(self,key):
-        if self.dictelements > 0 :
+    def get(self, key):
+        '''
+        get method is used to display the indices of bucket and node
+        for a particular key.
+        '''
+
+        if self.dictelements > 0:
+            # loop through the number of buckets in the buckets
             for i in range(self.capacity):
+                # loop through nodes in the bucket
                 for j in range(self.buckets[i].len()):
+                    # Verify whether any of the key of an existing node matches
+                    # with that of given key.
                     if self.buckets[i].get_node_at_index(j).key == key:
-                        return 'found in bucket '+str(i)+' at node - '+str(j)
+                        return 'found in bucket ' + str(i) + ' at node - ' + str(j)
+
+        # return the no element exists message.
         return "No elements exists"
 
-    def remove(self,key):
-        if self.dictelements >0 :
+    def remove(self, key):
+        '''
+        to remove a key from the buckets.
+        '''
+
+        # check if the we have more than 1 dict eleements
+        if self.dictelements > 0:
+            # loop through each bucket in buckets
             for i in range(self.capacity):
+                # to delete the key
                 is_deleted = self.buckets[i].ll_remove(key)
-                print(is_deleted)
+                # if deleted from any of the bucket, the return.
                 if is_deleted == 'deleted':
                     return 'deleted'
+        # declare that the key was not found
         return 'key not found'
+
 
 
 
@@ -168,3 +205,5 @@ if __name__ == "__main__":
     print('printing dictionary after removal of string python',dict1)
     print('delete the key c',dict1.remove('c'))
     print('printing dictionary after removal of string c',dict1)
+    print('delete the key php', dict1.remove('php'))
+    print('printing dictionary after removal of string php', dict1)
